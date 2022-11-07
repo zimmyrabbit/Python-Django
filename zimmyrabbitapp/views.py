@@ -1,4 +1,7 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
+from django.views.decorators.csrf import csrf_exempt
+
+nextId = 4
 
 topics = [
     {'id':1, 'title':'routing', 'body':'Routing is ..'},
@@ -16,15 +19,18 @@ def HTMLTemplate(article):
         ol += f'<li><a href="/read/{topic["id"]}">{topic["title"]}</a></li>'
 
     return f'''
-    <html>
-    <body>
-        <h1>Django</h1>
-        <ol>
-            {ol}
-        </ol>
-        {article}
-    </body>
-    </html>
+        <html>
+        <body>
+            <h1><a href="/">Django</a></h1>
+            <ol>
+                {ol}
+            </ol>
+            {article}
+            <ul>
+                <li><a href="/create/">create</a></li>
+            </ul>
+        </body>
+        </html>
     '''
 
 def index(request):
@@ -36,10 +42,33 @@ def index(request):
 
     return HttpResponse(HTMLTemplate(article))
 
+@csrf_exempt
 def create(request):
-    return HttpResponse('Creat')
 
-def read(requestm,id):
+    print('request.method ===> ', request.method)
+
+    global nextId
+
+    if request.method == 'GET':
+        article = '''
+            <form action="/create/" method="post">
+            <p><input type="text" name="title" placeholder="title"></p>
+            <p><textarea name="body" placeholder="body"></textarea></p>
+            <p><input type="submit"></p>
+            </form>
+        '''
+        return HttpResponse(HTMLTemplate(article))
+    elif request.method == 'POST':
+        print(request.POST)
+        title = request.POST['title']
+        body = request.POST['body']
+        newTopic = {"id":nextId, "title":title, "body":body}
+        topics.append(newTopic)
+        url = '/read/' + str(nextId)
+        nextId += 1
+        return redirect(url)
+
+def read(request,id):
 
     global topics
     article = ''
@@ -47,5 +76,5 @@ def read(requestm,id):
         if topic['id'] == int(id):
             article = f'<h2>{topic["title"]}</h2>{topic["body"]}'
 
-    return HttpResponse(HttpResponse(article))
+    return HttpResponse(HTMLTemplate(article))
 

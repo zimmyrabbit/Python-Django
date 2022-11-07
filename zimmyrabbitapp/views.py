@@ -21,7 +21,8 @@ def HTMLTemplate(article, id=None):
                     <input type="hidden" name="id" value={id}>
                     <input type="submit" value="delete">
                 </form>
-            </li>            
+            </li>
+            <li><a href="/update/{id}">update</a></li>            
         '''
 
     ol = ''
@@ -64,9 +65,9 @@ def create(request):
     if request.method == 'GET':
         article = '''
             <form action="/create/" method="post">
-            <p><input type="text" name="title" placeholder="title"></p>
-            <p><textarea name="body" placeholder="body"></textarea></p>
-            <p><input type="submit"></p>
+                <p><input type="text" name="title" placeholder="title"></p>
+                <p><textarea name="body" placeholder="body"></textarea></p>
+                <p><input type="submit"></p>
             </form>
         '''
         return HttpResponse(HTMLTemplate(article))
@@ -101,3 +102,31 @@ def delete(request):
                 newTopics.append(topic)
         topics = newTopics
         return redirect('/')
+
+@csrf_exempt
+def update(request, id):
+    global topics
+    if request.method == 'GET':
+
+        for topic in topics:
+            if topic['id'] == int(id):
+                selectedTopic = {"title":topic['title'], "body":topic['body']}
+
+        article = f'''
+            <form action="/update/{id}/" method="post">
+                <p><input type="text" name="title" placeholder="title" value={selectedTopic["title"]}></p>
+                <p><textarea name="body" placeholder="body">{selectedTopic["body"]}</textarea></p>
+                <p><input type="submit"></p>
+            </form>
+        '''
+        return HttpResponse(HTMLTemplate(article, id))
+    elif request.method == 'POST':
+
+        title = request.POST['title']
+        body = request.POST['body']
+        for topic in topics:
+            if topic['id'] == int(id):
+                topic['title'] = title
+                topic['body'] = body
+
+        return redirect(f'/read/{id}')

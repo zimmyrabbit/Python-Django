@@ -4,14 +4,20 @@ from .models import Question
 from .models import Answer
 from django.utils import timezone
 from .forms import QuestionForm, AnswerFrom
+from django.core.paginator import Paginator
 
 def index(request):
     '''
     pybo 목록 출력
     '''
+    page = request.GET.get('page','1')
     
     question_list = Question.objects.order_by('-create_date') # - 를 붙임으로 써 역순 정렬
-    context = {'question_list': question_list}
+
+    paginator = Paginator(question_list, 10)
+    page_obj = paginator.get_page(page)
+
+    context = {'question_list': page_obj}
 
     return render(request, 'pybo/question_list.html',context)
 

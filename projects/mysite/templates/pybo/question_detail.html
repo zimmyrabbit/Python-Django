@@ -75,9 +75,20 @@
         </div>
     </div>
 
-    <h5 class="border-bottom my-3 py-2">{{question.answer_set.count}}개의 답변이 있습니다.</h5>
+    <div class="row justify-content-between my-3 border-bottom">
+        <div class="col-6">
+            <h5 class="my-3 py-2">{{answer_list.count}}개의 답변이 있습니다.</h5>
+        </div>
+        <div class="col-2 my-3">
+            <select class="form-control so">
+                <option value="recent" {% if so == 'recent' %}selected{%endif%}>최신순</option>
+                <option value="recommend" {% if so == 'recommend' %}selected{%endif%}>추천순</option>
+                <option value="popular" {% if so == 'popular' %}selected{%endif%}>댓글순</option>
+            </select>
+        </div>
+    </div>
 
-    {% for answer in question.answer_set.all %}
+    {% for answer in answer_list %}
     <a name="answer_{{answer.id}}"></a>
     <div class="row my-3">
         <!-- 댓글 추천 start -->
@@ -162,6 +173,10 @@
         <input type="submit" value="답변등록" class="btn btn-primary">
     </form>
 </div>
+<form id="searchForm" method="get" action="{% url 'pybo:detail' question.id %}">
+    <!--<input type="hidden" id="page" name="page" value="{{page}}">-->
+    <input type="hidden" id="so" name="so" value="{{so}}">
+</form>
 {% endblock %}
 
 {% block script %}
@@ -178,6 +193,11 @@ $(document).ready(function(){
             location.href = $(this).data('uri');
         }
     });
+
+    $(".so").on('change', function() {
+        $("#so").val($(this).val());
+        $("#searchForm").submit();
+    })
 })
 </script>
 {% endblock %}

@@ -41,6 +41,7 @@ def detail(request, question_id):
     pybo 내용 출력
     '''
 
+    page = request.GET.get('page','1')
     so = request.GET.get('so','recent')
 
     question = get_object_or_404(Question, pk=question_id)
@@ -52,5 +53,10 @@ def detail(request, question_id):
     elif so == 'recent' :
         answer_list = Answer.objects.filter(question=question).order_by('-create_date')
 
-    context = {'question':question, 'answer_list':answer_list, 'so':so}
+    answer_list_count = answer_list.count
+
+    paginator = Paginator(answer_list, 10)
+    page_obj = paginator.get_page(page)
+
+    context = {'question':question, 'answer_list':page_obj, 'so':so, 'page':page, 'answer_list_count':answer_list_count}
     return render(request, 'pybo/question_detail.html',context)

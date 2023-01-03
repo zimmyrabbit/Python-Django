@@ -28,7 +28,7 @@ class PasswordResetView(auth_views.PasswordResetView):
     '''
     비밀번호 초기화
     '''
-    template_name = 'common/password_reset.html'
+    #template_name = 'common/password_reset.html'
     
     def form_invalid(self, form):
         messages.error(self.request, '올바른 이메일 주소를 입력하세요.')
@@ -38,8 +38,17 @@ class PasswordResetView(auth_views.PasswordResetView):
         email = self.request.POST.get('email')
         username = self.request.POST.get('username')
         if User.objects.filter(email=email).exists():
-            user = User.objects.filter(email=email, username=username).values('id').first()
-            userid = get_object_or_404(User, pk=user['id'])
+
+            
+            #user1 = User.objects.filter(email=email, username=username).values('id').first()
+            #user2 = get_object_or_404(User, pk=user1['id'])
+
+            #form = UserForm(self.request.POST, instance=user2)
+
+            #form = form.save(commit=False)
+            #user2.password = '111'
+            #form.save()
+
 
             messages.success(self.request, '이메일로 재생성된 비밀번호를 발송했습니다.')
             return render(self.request, 'common/password_reset.html')

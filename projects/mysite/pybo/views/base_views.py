@@ -46,7 +46,7 @@ def detail(request, question_id):
     '''
     pybo 내용 출력
     '''
-    print('ddddddddddddddddddddddddddddddddddd')
+    
     page = request.GET.get('page','1')
     so = request.GET.get('so','recent')
 

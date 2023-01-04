@@ -24,8 +24,6 @@ def index(request, category_name='qna'):
     
     #question_list = Question.objects.order_by('-create_date') # - 를 붙임으로 써 역순 정렬
 
-    category_list = Category.objects.all()
-
     if kw :
         question_list = question_list.filter(
             Q(subject__icontains=kw) |

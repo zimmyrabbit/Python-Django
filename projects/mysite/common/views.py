@@ -15,6 +15,8 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 
 def signup(request):
     '''
@@ -33,39 +35,6 @@ def signup(request):
     else :
         form = UserForm()
     return render(request, 'common/signup.html', {'form':form})
-
-
-# class PasswordResetView(auth_views.PasswordResetView):
-#     '''
-#     비밀번호 초기화
-#     '''
-#     #template_name = 'common/password_reset.html'
-    
-#     def form_invalid(self, form):
-#         messages.error(self.request, '올바른 이메일 주소를 입력하세요.')
-#         return render(self.request, 'common/password_reset.html')
-
-#     def form_valid(self, form):
-#         email = self.request.POST.get('email')
-#         username = self.request.POST.get('username')
-#         if User.objects.filter(email=email).exists():
-
-            
-#             #user1 = User.objects.filter(email=email, username=username).values('id').first()
-#             #user2 = get_object_or_404(User, pk=user1['id'])
-
-#             #form = UserForm(self.request.POST, instance=user2)
-
-#             #form = form.save(commit=False)
-#             #user2.password = '111'
-#             #form.save()
-
-
-#             messages.success(self.request, '이메일로 재생성된 비밀번호를 발송했습니다.')
-#             return render(self.request, 'common/password_reset.html')
-#         else:
-#             messages.error(self.request, '해당 이메일의 사용자를 찾을 수 없습니다.')
-#             return render(self.request, 'common/password_reset.html')
 
 def password_reset_request(request):
 
@@ -99,7 +68,7 @@ def password_reset_request(request):
                         send_mail(subject,email,settings.EMAIL_HOST_USER,[user.email],fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
-                    messages.success(request,'이메일로 재생성된 비밀번호를 발송했습니다.')
+                    messages.success(request,'비밀번호 재설정 이메일을 발송했습니다.')
                     return render(request, 'common/password_reset.html')
             else :
                 messages.error(request,'해당 사용자를 찾을 수 없습니다.')

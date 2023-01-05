@@ -1,0 +1,17 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {% if profile_type == 'base' %}active{% endif %}" href="{% url 'common:profile_base' profile_user.id %}">기본정보</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if profile_type == 'question' %}active{% endif %}" href="#">게시</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if profile_type == 'answer' %}active{% endif %}" href="#">답변</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if profile_type == 'comment' %}active{% endif %}" href="#">댓글</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if profile_type == 'vote' %}active{% endif %}" href="#">추천</a>
+    </li>
+</ul>

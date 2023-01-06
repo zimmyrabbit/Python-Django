@@ -12,5 +12,6 @@ urlpatterns = [
     path('password_reset/', password_views.password_reset_request, name="password_reset"),
     #profile
     path('profile/base/<int:user_id>/', profile_views.profile_base, name='profile_base'),
-    path('profile/question/<int:user_id>/', profile_views.profile_question, name='profile_question'), 
+    path('profile/question/<int:user_id>/', profile_views.profile_question, name='profile_question'),
+    path('profile/answer/<int:user_id>/', profile_views.profile_answer, name='profile_answer'), 
 ]

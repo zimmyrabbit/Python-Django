@@ -6,7 +6,7 @@
         <a class="nav-link {% if profile_type == 'question' %}active{% endif %}" href="{% url 'common:profile_question' profile_user.id %}">게시</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {% if profile_type == 'answer' %}active{% endif %}" href="#">답변</a>
+        <a class="nav-link {% if profile_type == 'answer' %}active{% endif %}" href="{% url 'common:profile_answer' profile_user.id %}">답변</a>
     </li>
     <li class="nav-item">
         <a class="nav-link {% if profile_type == 'comment' %}active{% endif %}" href="#">댓글</a>

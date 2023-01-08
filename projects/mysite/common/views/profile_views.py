@@ -1,7 +1,10 @@
+from itertools import count
 from django.shortcuts import render, get_object_or_404
 
 from django.contrib.auth.models import User
-from pybo.models import Question, Answer
+from django.db.models import F, Count
+from itertools import chain
+from pybo.models import Question, Answer, Comment
 
 def profile_base(request, user_id):
     '''
@@ -28,3 +31,29 @@ def profile_answer(request, user_id):
     answer = Answer.objects.filter(author = user_id)
     context = {'profile_user':user, 'profile_answer':answer, 'profile_type':'answer'}
     return render(request, 'common/profile/profile_answer.html',context)
+
+def profile_comment(request, user_id):
+    '''
+    작성한 댓글
+    '''
+    user = get_object_or_404(User,pk=user_id)
+    comment = Comment.objects.filter(author = user_id)
+    context = {'profile_user':user, 'profile_comment':comment, 'profile_type':'comment'}
+    return render(request, 'common/profile/profile_comment.html',context)
+
+def profile_vote(request, user_id):
+    '''
+    추천한 게시물
+    '''
+    user = get_object_or_404(User,pk=user_id)
+    question_list = user.voter_question.annotate(num_voter=Count('voter'))
+    answer_list = user.voter_answer.annotate(category=F('question__category__description'), num_voter=Count('voter'))
+
+    _query_set = sorted(
+        chain(question_list, answer_list),
+        key=lambda obj: obj.create_date,
+        reverse=True,
+    )
+
+    context = {'profile_user':user, 'profile_vote':_query_set, 'profile_type':'vote'}
+    return render(request, 'common/profile/profile_vote.html',context)

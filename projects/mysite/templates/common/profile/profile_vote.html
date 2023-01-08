@@ -21,10 +21,16 @@
         </tr>
     </thead>
     <tbody>
-    {% if profile_answer %}
-    {% for object in profile_answer %}
+    {% if profile_vote %}
+    {% for object in profile_vote %}
     <tr class="text-center">
-        <td>{{ object.question.category.description }}</td>
+        <td>            
+            {% if object.question %}
+                {{ object.question.category.description }}
+            {% else %}
+                {{ object.category.description }}
+            {% endif %}
+            </td>
         <td>
             {% if object.voter.count > 0 %}
                 <span class="badge badge-warning px-2 py-1">{{ object.voter.count }}</span>
@@ -33,17 +39,17 @@
             {% endif %}
         </td>
         <td class="text-left">
-            <a href="{% url 'pybo:detail' object.question_id %}">{{ object.content }}</a>
-{#            {% if object.answer_set.count > 0 %}#}
-{#                <span class="text-danger small ml-2">{{ object.answer_set.count }}</span>#}
-{#            {% endif %}#}
+            <a href="{% url 'pybo:detail' object.id %}">{{ object.content }}</a>
+            {% if object.answer_set.count > 0 %}
+                <span class="text-danger small ml-2">{{ object.answer_set.count }}</span>
+            {% endif %}
         </td>
         <td>{{ object.create_date }}</td>
     </tr>
     {% endfor %}
     {% else %}
     <tr>
-        <td colspan="3">등록한 답변이 없습니다.</td>
+        <td colspan="3">등록한 추천이 없습니다.</td>
     </tr>
     {% endif %}
     </tbody>

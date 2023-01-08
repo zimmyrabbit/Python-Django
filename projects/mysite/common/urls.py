@@ -13,5 +13,7 @@ urlpatterns = [
     #profile
     path('profile/base/<int:user_id>/', profile_views.profile_base, name='profile_base'),
     path('profile/question/<int:user_id>/', profile_views.profile_question, name='profile_question'),
-    path('profile/answer/<int:user_id>/', profile_views.profile_answer, name='profile_answer'), 
+    path('profile/answer/<int:user_id>/', profile_views.profile_answer, name='profile_answer'),
+    path('profile/comment/<int:user_id>/', profile_views.profile_comment, name='profile_comment'), 
+    path('profile/vote/<int:user_id>/', profile_views.profile_vote, name='profile_vote'),   
 ]

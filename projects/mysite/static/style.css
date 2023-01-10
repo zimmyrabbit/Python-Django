@@ -2,3 +2,21 @@
     border-top:dotted 1px #ddd;
     font-size:0.7em;
 }
+
+.snowflake {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: black;
+    position:absolute;
+    top:-8px;
+}
+
+@keyframes fall{
+    from{
+
+    }to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}

@@ -21,9 +21,15 @@ class Question(models.Model):
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_question')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_question')
+    hit = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.subject
+
+    @property
+    def update_hit(self):
+        self.hit = self.hit + 1
+        self.save()
 
 class Answer(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_answer')

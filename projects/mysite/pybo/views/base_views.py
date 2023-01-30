@@ -64,16 +64,23 @@ def detail(request, question_id):
     page_obj = paginator.get_page(page)
 
     context = {'question':question, 'answer_list':page_obj, 'so':so, 'page':page, 'answer_list_count':answer_list_count}
+    
+    #HttpResponse 객체 변수에 할당
     response = render(request, 'pybo/question_detail.html',context)
 
+    #쿠키 만료기간 계산
     expire_date, now = datetime.now(), datetime.now()
     expire_date += timedelta(days=1)
     expire_date = expire_date.replace(hour=0, minute=0, second=0, microsecond=0)
     expire_date -= now
+
+    #남은시간 초 단위 환산
     max_age = expire_date.total_seconds()
 
+    #hit라는 이름의 cookie 가져옴 없을경우 기본값 '_'
     cookie_value = request.COOKIES.get('hit','_')
 
+    #쿠키가 존재하지 않을 시 조회수 +1
     if f'_{question_id}_' not in cookie_value:
         cookie_value += f'{question_id}_'
         response.set_cookie('hit', value=cookie_value, max_age=max_age, httponly=True)

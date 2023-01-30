@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q, Count
 from ..models import Question, Answer, Category
+from datetime import date, datetime, timedelta
 
 def index(request, category_name='qna'):
     '''
@@ -63,4 +64,20 @@ def detail(request, question_id):
     page_obj = paginator.get_page(page)
 
     context = {'question':question, 'answer_list':page_obj, 'so':so, 'page':page, 'answer_list_count':answer_list_count}
-    return render(request, 'pybo/question_detail.html',context)
+    response = render(request, 'pybo/question_detail.html',context)
+
+    expire_date, now = datetime.now(), datetime.now()
+    expire_date += timedelta(days=1)
+    expire_date = expire_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    expire_date -= now
+    max_age = expire_date.total_seconds()
+
+    cookie_value = request.COOKIES.get('hit','_')
+
+    if f'_{question_id}_' not in cookie_value:
+        cookie_value += f'{question_id}_'
+        response.set_cookie('hit', value=cookie_value, max_age=max_age, httponly=True)
+        question.hit += 1
+        question.save()
+    
+    return response

@@ -3,11 +3,15 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q, Count
 from ..models import Question, Answer, Category
 from datetime import date, datetime, timedelta
+import logging
+logger = logging.getLogger('pybo')
 
 def index(request, category_name='qna'):
     '''
     pybo 목록 출력
     '''
+    logger.info("INFO LEVEL")
+
     page = request.GET.get('page','1')
     kw = request.GET.get('kw','')
     so = request.GET.get('so','recent')
